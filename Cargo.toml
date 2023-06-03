@@ -1,0 +1,18 @@
+[package]
+
+name = "behelit"
+version = "0.0.0"
+edition = "2021"
+repository = "https://github.com/MahanBi/behelit"
+authors = ["deVOID <dirtymbgamer@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/MahanBi/behelit"
+readme = "README.md"
+description = "fast and lightweight web framework"
+categories = ["Asynchronous", "HTTP server", "Network programming"]
+
+[dependencies]
+
+tokio = { version = "1", features = ["full"] }
+async-trait = "0.1.68"
+thiserror = "1.0"

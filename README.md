@@ -1,7 +1,6 @@
 <br/>
 <p align="center">
   <h3 align="center">Behelit</h3>
-
   <p align="center">
     The lightning-fast, asynchronous, implement base Web Framework
     <br/>
@@ -15,7 +14,7 @@
   </p>
 </p>
 
-![Contributors](https://img.shields.io/github/contributors/MahanBi/Behelit?color=dark-green) ![License](https://img.shields.io/github/license/MahanBi/Behelit) 
+![Contributors](https://img.shields.io/github/contributors/MahanBi/Behelit?color=dark-green) ![License](https://img.shields.io/github/license/MahanBi/Behelit)
 
 ## Table Of Contents
 
@@ -37,10 +36,13 @@ This is an example of how you may give instructions on setting up your project l
 ### Installation
 
 - install from cargo
+
 ```sh
     cargo add behelit
 ```
-- or add this code to your Cargo.toml
+
+- or add this line to your Cargo.toml
+
 ```txt
     behelit = "0.0.0"
 ```
@@ -51,4 +53,21 @@ Distributed under the MIT License. See [LICENSE](https://github.com/MahanBi/Behe
 
 ## Authors
 
-* **deVOID** - ** - [deVOID](https://github.com/MahanBi) - **
+- **deVOID** - **- [deVOID](https://github.com/MahanBi) -**
+
+# TODO
+
+- [ ] Core
+  - [ ] write listener for TCP(http1/2) and UDP(http3)
+    - [ ] with builder design pattern for building a customizable listener server on top of TokIO
+ 
+- [ ] Proto
+  - [ ] http1
+  - [ ] http2
+  - [ ] http3
+
+- [ ] Request/Response
+  - [ ] write request parser fast and lightweight with the lowest count of copy and clone to make it look like no std. it means to try to don't use the String type.
+
+- [ ] Clean
+  - [ ] Cargo.toml: remove additional packages and features
