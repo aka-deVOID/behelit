@@ -1,1 +1,5 @@
-struct Server {}
+use tokio::net;
+
+struct Server;
+
+impl Server {}
