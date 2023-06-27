@@ -1,5 +1,3 @@
-use std::default;
-
 #[derive(Debug)]
 pub enum Status {
     // 100
@@ -62,10 +60,6 @@ pub enum Status {
     NetworkAuthenticationRequired,
 }
 
-trait Responder {
-    fn build(&self) {}
-}
-
 #[derive(Debug)]
 pub struct Response {
     pub status: Status,
@@ -79,14 +73,4 @@ impl Default for Response {
             body: "".to_string(),
         }
     }
-}
-
-impl Responder for Response {
-    fn build(&self) {}
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn response_test() {}
 }
