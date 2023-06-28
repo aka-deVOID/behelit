@@ -1,7 +1,5 @@
-use crate::error::{Error, Result};
-use std::collections::HashMap;
-
-type Header<'header> = HashMap<&'header str, &'header str>;
+use crate::error::Result;
+use std::{collections::HashMap, str::from_utf8};
 
 #[derive(Debug, Default)]
 pub enum Method {
@@ -14,6 +12,31 @@ pub enum Method {
     OPTION,
     DELETE,
     CONNECT,
+}
+
+type Header<'buf> = HashMap<&'buf str, &'buf str>;
+type Params<'buf> = HashMap<&'buf str, &'buf str>;
+
+#[derive(Debug, Default)]
+/// Request struct provide eseay access to request data
+pub struct Request<'buf> {
+    pub headers: Header<'buf>,
+    pub path: &'buf str,
+    pub url: &'buf str,
+    pub params: Params<'buf>,
+    pub method: Method,
+    pub body: &'buf str,
+}
+
+#[derive(Debug, Default)]
+/// PreRequest Builder struct for Request
+pub struct PreRequest<'buf> {
+    pub headers: Header<'buf>,
+    pub path: &'buf [u8],
+    pub url: &'buf [u8],
+    pub params: Params<'buf>,
+    pub method: Method,
+    pub body: &'buf [u8],
 }
 
 impl Method {
@@ -32,56 +55,58 @@ impl Method {
     }
 }
 
-#[derive(Debug, Default)]
-/// Request struct provide eseay access to request data
-pub struct Request<'buf> {
-    pub headers: Header<'buf>,
-    pub path: &'buf str,
-    pub url: &'buf str,
-    pub params: HashMap<&'buf str, &'buf str>,
-    pub method: Method,
-    pub body: &'buf str,
-}
-
 /// Build Request
-trait RequestBuilder<'buf> {
+pub trait RequestBuilder<'buf> {
     /// TODO: add doc
-    fn headers();
+    fn headers(self, headers: Header) -> Self;
     /// TODO: add doc.
-    fn url();
+    fn url(self, url: &[u8]) -> Self;
     /// TODO: add doc.
-    fn params();
+    fn params(self, params: Params) -> Self;
     /// TODO: add doc.
-    fn method();
+    fn method(self, method: &[u8]) -> Self;
     /// TODO: add doc.
-    fn body();
+    fn body(self, body: &[u8]) -> Self;
     /// TODO: add doc.
-    fn build() -> Request<'buf>;
+    fn build(self) -> Result<Request<'buf>>;
 }
 
-impl<'buf> RequestBuilder<'buf> for Request<'buf> {
-    fn headers() {
-        todo!()
+impl<'buf> PreRequest<'buf> {
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl<'buf> RequestBuilder<'buf> for PreRequest<'buf> {
+    fn headers(self, headers: Header) -> Self {
+        self
     }
 
-    fn url() {
-        todo!()
+    fn url(self, url: &[u8]) -> Self {
+        self
     }
 
-    fn params() {
-        todo!()
+    fn params(self, params: Params) -> Self {
+        self
     }
 
-    fn method() {
-        todo!()
+    fn method(self, method: &[u8]) -> Self {
+        self
     }
 
-    fn body() {
-        todo!()
+    fn body(self, body: &[u8]) -> Self {
+        self
     }
 
-    fn build() -> Request<'buf> {
-        todo!()
+    fn build(self) -> Result<Request<'buf>> {
+        Ok(Request {
+            headers: self.headers,
+            path: from_utf8(self.path)?,
+            url: from_utf8(self.path)?,
+            params: self.params,
+            method: self.method,
+            body: from_utf8(self.body)?,
+        })
     }
 }
 
@@ -93,23 +118,5 @@ impl<'buf> Request<'buf> {
     /// This function will return an error if .
     pub fn new() -> Result<Self> {
         Ok(Self::default())
-    }
-
-    /// TODO: Move to Parser
-    ///
-    /// # Errors
-    ///
-    /// This function will return an error if .
-    pub fn first_line_parser(line_one: &str) -> Result<(&str, &str, &str)> {
-        let mut line_iter = line_one.split_whitespace();
-        let method = Method::str_to_method(line_iter.next());
-        let path = line_iter.next();
-        let version = line_iter.next();
-
-        todo!()
-    }
-
-    pub fn parse(request: &[u8]) -> Result<Self> {
-        todo!()
     }
 }

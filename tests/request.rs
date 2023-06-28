@@ -1,4 +1,4 @@
-use behelit::request::{Method, Request};
+use behelit::request::*;
 
 #[test]
 fn method_parser_test() {
@@ -8,4 +8,10 @@ fn method_parser_test() {
 #[test]
 fn request_parser() {
     let mut request = Request::new();
+}
+
+#[test]
+fn prerequest_builder_test() {
+    let req = PreRequest::new();
+    req.body(&[12, 33, 44, 55]);
 }
