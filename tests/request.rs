@@ -11,7 +11,4 @@ fn request_parser() {
 }
 
 #[test]
-fn prerequest_builder_test() {
-    let req = PreRequest::new();
-    req.body(&[12, 33, 44, 55]);
-}
+fn prerequest_builder_test() {}

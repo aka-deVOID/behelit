@@ -1,10 +1,8 @@
-use crate::error::Result;
-use std::{collections::HashMap, str::from_utf8};
+use std::collections::HashMap;
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub enum Method {
     PUT,
-    #[default]
     GET,
     POST,
     PATCH,
@@ -14,29 +12,26 @@ pub enum Method {
     CONNECT,
 }
 
-type Header<'buf> = HashMap<&'buf str, &'buf str>;
-type Params<'buf> = HashMap<&'buf str, &'buf str>;
-
-#[derive(Debug, Default)]
-/// Request struct provide eseay access to request data
-pub struct Request<'buf> {
-    pub headers: Header<'buf>,
-    pub path: &'buf str,
-    pub url: &'buf str,
-    pub params: Params<'buf>,
-    pub method: Method,
-    pub body: &'buf str,
+#[derive(Debug)]
+pub enum Version {
+    H1,
+    H2,
+    H3,
 }
 
-#[derive(Debug, Default)]
-/// PreRequest Builder struct for Request
-pub struct PreRequest<'buf> {
-    pub headers: Header<'buf>,
-    pub path: &'buf [u8],
-    pub url: &'buf [u8],
-    pub params: Params<'buf>,
+pub type Header<'buff> = HashMap<&'buff str, &'buff str>;
+pub type Params<'buff> = HashMap<&'buff str, &'buff str>;
+
+#[derive(Debug)]
+/// Request struct provide eseay access to request data
+pub struct Request<'buff> {
+    pub headers: Header<'buff>,
+    pub path: &'buff str,
+    pub url: &'buff str,
+    pub version: Version,
+    pub params: Option<Params<'buff>>,
     pub method: Method,
-    pub body: &'buf [u8],
+    pub body: &'buff str,
 }
 
 impl Method {
@@ -45,78 +40,47 @@ impl Method {
     /// # Errors
     ///
     /// This function will return an error if .
-    fn str_to_method(str: Option<&str>) -> Result<Self> {
-        match str {
-            Some("GET") => Ok(Self::GET),
-            Some("POST") => Ok(Self::POST),
-            Some("PUT") => Ok(Self::PUT),
+    pub fn buff_to_method(buff: &[u8]) -> Self {
+        match buff {
+            b"PUT" => Self::PUT,
+            b"GET" => Self::GET,
+            b"POST" => Self::POST,
+            b"PATCH" => Self::PATCH,
+            b"TRACE" => Self::TRACE,
+            b"OPTION" => Self::OPTION,
+            b"CONNECT" => Self::CONNECT,
+            b"DELETE" => Self::DELETE,
             _ => todo!(),
         }
     }
 }
 
-/// Build Request
-pub trait RequestBuilder<'buf> {
-    /// TODO: add doc
-    fn headers(self, headers: Header) -> Self;
-    /// TODO: add doc.
-    fn url(self, url: &[u8]) -> Self;
-    /// TODO: add doc.
-    fn params(self, params: Params) -> Self;
-    /// TODO: add doc.
-    fn method(self, method: &[u8]) -> Self;
-    /// TODO: add doc.
-    fn body(self, body: &[u8]) -> Self;
-    /// TODO: add doc.
-    fn build(self) -> Result<Request<'buf>>;
-}
-
-impl<'buf> PreRequest<'buf> {
-    pub fn new() -> Self {
-        Self::default()
+impl Version {
+    pub fn buff_to_version(buff: &[u8]) -> Self {
+        match buff {
+            b"HTTP/1.1" => Self::H1,
+            b"HTTP/2" => Self::H2,
+            b"HTTP/3" => Self::H3,
+            _ => todo!(),
+        }
     }
 }
 
-impl<'buf> RequestBuilder<'buf> for PreRequest<'buf> {
-    fn headers(self, headers: Header) -> Self {
-        self
-    }
-
-    fn url(self, url: &[u8]) -> Self {
-        self
-    }
-
-    fn params(self, params: Params) -> Self {
-        self
-    }
-
-    fn method(self, method: &[u8]) -> Self {
-        self
-    }
-
-    fn body(self, body: &[u8]) -> Self {
-        self
-    }
-
-    fn build(self) -> Result<Request<'buf>> {
-        Ok(Request {
-            headers: self.headers,
-            path: from_utf8(self.path)?,
-            url: from_utf8(self.path)?,
-            params: self.params,
-            method: self.method,
-            body: from_utf8(self.body)?,
-        })
-    }
-}
-
-impl<'buf> Request<'buf> {
+impl<'buff> Request<'buff> {
     /// TODO: Add Doc
     ///
     /// # Errors
     ///
     /// This function will return an error if .
-    pub fn new() -> Result<Self> {
-        Ok(Self::default())
+    pub fn new() -> Self {
+        Self {
+            headers: todo!(),
+            path: todo!(),
+            url: todo!(),
+            params: todo!(),
+            method: todo!(),
+            body: todo!(),
+            version: todo!(),
+        }
     }
 }
